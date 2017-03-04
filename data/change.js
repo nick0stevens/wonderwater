@@ -10,8 +10,8 @@
  var curThreshold = 100;
 
 //var url = 'http://192.168.20.10'
-var url = '';
-//var url = 'http://wonderWater.local/';
+//var url = '';
+var url = 'http://wonderWater.local/';
 
 
 
