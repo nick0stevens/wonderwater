@@ -10,10 +10,10 @@
 //---------------------WIFI DETAILS
 
 const char* host = "wonderWater"; // name for mDNS
-//const char* ssid = "thebakery.no";
-//const char* password = "morethanjustbread";
-const char* ssid = "Zhone169537";
-const char* password = "Conrad1sgat3";
+const char* ssid = "thebakery.no";
+const char* password = "morethanjustbread";
+//const char* ssid = "Zhone169537";
+//const char* password = "Conrad1sgat3";
 
 
 //---------------------PIN NUMBERS FOR SENSOR AND VALVE
