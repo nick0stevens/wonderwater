@@ -1,6 +1,4 @@
 void allowFlashOverWeb(){
-
-
     server.on("/flash.html", HTTP_GET, [](){
       server.sendHeader("Connection", "close");
       server.sendHeader("Access-Control-Allow-Origin", "*");

@@ -14,14 +14,23 @@ initValve();
 initWifi();
 pinMode(LED_BUILTIN, OUTPUT);
 digitalWrite(LED_BUILTIN, HIGH);
+checkSensor();
 
 }
 
 void loop(void){
-  server.handleClient();
+  //digitalWrite(sensorPower,HIGH);
+
+currentTime = millis();
+server.handleClient();
 
 
-seconds = ceil(millis()/1000);
+if(operating){
+ checkSensor();
+}
+ checkValve();
+
+//seconds = ceil(millis()/1000);
 /*
 if(seconds % 10 == 0){
   openValve();

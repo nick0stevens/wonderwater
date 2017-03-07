@@ -6,8 +6,10 @@
   var textS;
   var curTemp = 20;
   var curInterval = 60;
+  var curSensor = 0;
   var watering = false;
   var started = false;
+  var last = 0;
 
 //var url = 'http://192.168.20.10'
 //var url = 'http://wonderWater.local/';
@@ -26,8 +28,8 @@ function setup() {
   waterButton.position(150, 85);
   waterButton.mousePressed(start);
 
-  waterButton = createButton('WATER');
-  waterButton.position(250, 85);
+  //waterButton = createButton('WATER');
+  //waterButton.position(250, 85);
   //waterButton.mousePressed(water);
 
   waterButton = createButton('WATER NOW');
@@ -48,12 +50,46 @@ function water() {
   xhr.send();
 }
 */
+
+
+function getSensor(){
+console.log("get sensor value");
+
+   var address = url + "sensor";
+   loadJSON(address, loadSensor);
+}
+
+function loadSensor(newSensor){
+//Get the loaded JSON data
+console.log("commencing loading");
+  console.log(newSensor);
+  curSensor = newSensor.sensor;
+  console.log("loaded");
+
+}
+function getButtons(){
+console.log("get buttons");
+
+   var address = url + "buttons";
+   loadJSON(address, loadButtons);
+}
+
+function loadButtons(newButtons){
+//Get the loaded JSON data
+console.log("commencing loading");
+  console.log(newButtons);
+  watering = newButtons.watering;
+  started = newButtons.started;
+  console.log("loaded");
+
+}
+
 function water() {
   var xhr = new XMLHttpRequest();
   if(started){
   if(!watering){watering=true;}
   else{watering = false;}
-  xhr.open('GET', url +"buttonPage?Water=" + watering, true);
+  xhr.open('GET', url +"buttons/save?Water=" + watering, true);
   xhr.send();
 }
 else{
@@ -64,8 +100,9 @@ else{
 function start() {
   var xhr = new XMLHttpRequest();
   if(!started){started=true;}
-  else{started = false;}
-  xhr.open('GET', url +"buttonPage?Start=" + started, true);
+  else{started = false;
+  watering = false;}
+  xhr.open('GET', url +"buttons/save?Start=" + started, true);
   xhr.send();
 }
 
@@ -77,7 +114,15 @@ function linkPage(page){
 
 
 function draw(){
-
+  clear();
+  if(millis()>last +3000){
+    getSensor();
+    //getButtons();
+    last = millis();
+  }
+fill(0);
+textSize(30);
+text(curSensor, 200,300);
 
 }
 

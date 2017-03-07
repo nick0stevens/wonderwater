@@ -1,47 +1,19 @@
 
-void handleWaterOn(){
-
-  digitalWrite(LED_BUILTIN, LOW);  // Turn the LED off by making the voltage LOW
-  openValve();
-  server.send(200, "text/plain", "");
-
-  }
-
-  void handleWaterOff(){
-  digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off by making the voltage HIGH
-  closeValve();
-  server.send(200, "text/plain", "");
-  }
-/*
-  void handleButtonPage(){
-
-      if (server.hasArg("LED")){
-Serial.println("yup");
-}
-  DBG_OUTPUT_PORT.println("handleButtonPage  ");
-     // server.send(200, "text/html", "<INPUT type=\"button\" name=\"LED\" value=\"LED\"><BR>");
-
-     server.send(200, "text/html", "<form method='POST' action='/buttonPage/ONgg' <a href=\"ONbbb\"  value=\"LED\" button style=\"display: block; width: 10%;\">ON</button></a> <form method='GET' action='/buttonPage' <a href=\"off\"><button style=\"display: block; width: 100%;\">OFF</button></a>");
-
- // server.send(200, "text/html", "<form method='GET'  <a href=\"ONbbb\"  value=\"IT\" button style=\"display: block; width: 10%;\">ON</button></a> <form method='GET' action='/buttonPage' <a href=\"off\"><button style=\"display: block; width: 100%;\">OFF</button></a>");
-  //server.send(200, "text/html", "<FORM><input type=\"button\" value=\"Add Students\" onclick=\"window.location.href='ON';\"></FORM>");
-
-    }
-
-*/
-    void handleButtonPage(){
+    void handleButtonSave(){
 
       if(server.hasArg("Water")){
         DBG_OUTPUT_PORT.println("handleWater ");
 
     if (server.arg("Water")=="false"){
-      digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off by making the voltage HIGH
       closeValve();
+      irrigating = false;
       Serial.println("water off");
     }
     if (server.arg("Water")=="true"){
-      digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on by making the voltage LOW
       openValve();
+      irrigating = true;
+      needWater= false;
+      valveOnTime = currentTime;
       Serial.println("water on");
     }
 }
@@ -50,10 +22,14 @@ if(server.hasArg("Start")){
   DBG_OUTPUT_PORT.println("handleStart ");
 
 if (server.arg("Start")=="false"){
+  operating = false;
+  closeValve();
+  irrigating = false;
 
 Serial.println("Stopped");
 }
 if (server.arg("Start")=="true"){
+  operating = true;
 
 Serial.println("Started");
 }
@@ -125,35 +101,28 @@ void allowWebInterface(){
       //get analog input value in json call
   server.on("/sensor", HTTP_GET, [](){
     String json = "{";
-    json += "\"analog\":"+ String(sensorValue) ;
+    json += "\"sensor\":"+ String(sensorValue) ;
     json += "}";
     server.send(200, "text/json", json);
     json = String();
   });
 
+  server.on("/buttons",HTTP_GET, [](){
+  String json = "{";
+  json += "\"watering\":"+ String(irrigating) ;
+  json += ", \"operating\":"+String(operating);
+  json += "}";
+  server.send(200, "text/json", json);
+  json = String();
+});
 
-  server.on("/buttonPage",  handleButtonPage);
 
-
-//  server.on("/buttonPage?Water",  handleWater);
-
-
-//  server.on("/buttonPage?Start",  handleStart);
+  server.on("/buttons/save",  handleButtonSave);
 
 
   server.on("/variables/save",  handleVariablesSave);
 
-   //server.on("/change", handleFileRead("/change"));
 
-    server.on("/variables",HTTP_GET, [](){
-    String json = "{";
-    json += "\"period\":"+ String(period) ;
-    json += ", \"interval\":"+String(interval);
-    json += ", \"sInterval\":"+String(sInterval);
-    json += ", \"threshold\":"+String(threshold);
-    json += "}";
-    server.send(200, "text/json", json);
-    json = String();
-  });
+
 
   }

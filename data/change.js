@@ -8,15 +8,17 @@
  var curInterval = 60;
  var curSInterval = 60;
  var curThreshold = 100;
+ var curWatering = 0;
+ var last = 0;
 
 //var url = 'http://192.168.20.10'
-//var url = '';
-var url = 'http://wonderWater.local/';
+var url = '';
+//var url = 'http://wonderWater.local/';
 
 
 
 function setup() {
-  getVariables();
+
 
   createCanvas(640, 480);
 
@@ -113,7 +115,7 @@ document.getElementById('start').onclick = function(e) {linkPage("index.html");
 
   textAlign(LEFT);
   textSize(50);
-
+getVariables();
 
 }
 
@@ -155,6 +157,7 @@ console.log("commencing loading");
   curInterval = newVariables.interval;
   curSInterval = newVariables.sInterval;
   curThreshold = newVariables.threshold;
+  curWatering = newVariables.irrigating;
   console.log(curPeriod); // inspect the humidity in the console
   console.log(curInterval); // inspect the humidity in the console
   console.log(oldVari); // inspect the humidity in the console
@@ -171,8 +174,19 @@ function draw(){
   text(curInterval, 75, 155);
   text(curSInterval, 75, 235);
   text(curThreshold, 75, 315);
-
-
+/*
+if(millis()>last +2000){
+getVariables();
+last = millis();
+}
+*/
+if(curWatering){
+  fill(0,255,0);
+}
+else{
+  fill(255,0,0);
+}
+ rect(400,200,50,50);
 
 
 	//if(screenInit == 0){
