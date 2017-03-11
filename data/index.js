@@ -7,8 +7,8 @@
   var curTemp = 20;
   var curInterval = 60;
   var curSensor = 0;
-  var watering = false;
-  var started = false;
+  var curWatering = false;
+  var curStarted = false;
   var last = 0;
 
 //var url = 'http://192.168.20.10'
@@ -26,21 +26,30 @@ function setup() {
 
   waterButton = createButton('START/STOP');
   waterButton.position(150, 85);
-  waterButton.mousePressed(start);
-
+  waterButton.id('start');
+  document.getElementById('start').onclick = function(e)
+  {
+    sendButton("Start");
+  };
   //waterButton = createButton('WATER');
   //waterButton.position(250, 85);
   //waterButton.mousePressed(water);
 
   waterButton = createButton('WATER NOW');
   waterButton.position(350, 85);
-  waterButton.mousePressed(water);
+  waterButton.id('water');
+  document.getElementById('water').onclick = function(e)
+  {
+    sendButton("Water");
+  };
 
   flashButton = createButton('SETTINGS');
   flashButton.position(350, 165);
   flashButton.id('settings');
-  document.getElementById('settings').onclick = function(e) {linkPage("change.html");
-};
+  document.getElementById('settings').onclick = function(e)
+  {
+    linkPage("change.html");
+  };
 
 }
 /*
@@ -53,15 +62,14 @@ function water() {
 
 
 function getSensor(){
-console.log("get sensor value");
-
+   console.log("get sensor value");
    var address = url + "sensor";
    loadJSON(address, loadSensor);
 }
 
 function loadSensor(newSensor){
 //Get the loaded JSON data
-console.log("commencing loading");
+  console.log("commencing loading");
   console.log(newSensor);
   curSensor = newSensor.sensor;
   console.log("loaded");
@@ -78,33 +86,24 @@ function loadButtons(newButtons){
 //Get the loaded JSON data
 console.log("commencing loading");
   console.log(newButtons);
-  watering = newButtons.watering;
-  started = newButtons.started;
+  curWatering = newButtons.watering;
+  curStarted = newButtons.started;
   console.log("loaded");
 
 }
 
-function water() {
+function sendButton(mode) {
   var xhr = new XMLHttpRequest();
-  if(started){
-  if(!watering){watering=true;}
-  else{watering = false;}
-  xhr.open('GET', url +"buttons/save?Water=" + watering, true);
-  xhr.send();
-}
-else{
+  if((mode == water) && (!started)){
   alert("Watering system must be turned on first");
 }
-}
-
-function start() {
-  var xhr = new XMLHttpRequest();
-  if(!started){started=true;}
-  else{started = false;
-  watering = false;}
-  xhr.open('GET', url +"buttons/save?Start=" + started, true);
+else{
+  xhr.open('GET', url +"buttons/save?Button=" + mode, true);
   xhr.send();
 }
+getButtons();
+}
+
 
 
 function linkPage(page){
@@ -117,12 +116,20 @@ function draw(){
   clear();
   if(millis()>last +3000){
     getSensor();
-    //getButtons();
+    getButtons();
     last = millis();
   }
 fill(0);
 textSize(30);
 text(curSensor, 200,300);
+
+if(curWatering){
+  fill(0,255,0);
+}
+else{
+  fill(255,0,0);
+}
+ rect(400,200,50,50);
 
 }
 

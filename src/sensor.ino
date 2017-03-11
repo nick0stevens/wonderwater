@@ -17,6 +17,6 @@ void readSensor(){
   sensorValue = analogRead(sensor);
   digitalWrite(sensorPower, LOW);
   sensorValue = map(sensorValue,0,1024,0,100);
-  if(debug){Serial.print("sensor value: ");Serial.println(sensorValue);}
+  //if(debug){Serial.print("sensor value: ");Serial.println(sensorValue);}
 
   }

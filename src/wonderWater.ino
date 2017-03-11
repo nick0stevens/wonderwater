@@ -9,6 +9,8 @@ void setup(void){
 
 initSerial();
 initSpiffs();
+//saveConfig();
+initVariables();
 initSensor();
 initValve();
 initWifi();

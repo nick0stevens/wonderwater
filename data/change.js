@@ -4,10 +4,10 @@
 	var newVari = 0;
 	var oldVari = 10;
   var textS;
- var curPeriod = 20;
- var curInterval = 60;
- var curSInterval = 60;
- var curThreshold = 100;
+ var curPeriod = 0;
+ var curInterval = 0;
+ var curSInterval = 0;
+ var curThreshold = 0;
  var curWatering = 0;
  var last = 0;
 
@@ -33,14 +33,16 @@ function setup() {
   periodTip = createSpan("period of each watering");
   periodTip.class("tooltiptext");
   periodTip.parent(periodText);
-  periodInput = createInput(curPeriod);
+  periodInput = createInput("enter Period");
   periodInput.id("periodValue");
   periodInput.position(20, 85);
   periodButton = createButton('submit');
   periodButton.id("period");
   periodButton.position(170, 85);
-  document.getElementById('period').onclick = function(e) {inputVariable("period","periodValue");
-};
+  document.getElementById('period').onclick = function(e)
+  {
+    inputVariable("period","periodValue");
+  };
 
 ///////// interval
 
@@ -56,8 +58,10 @@ function setup() {
   intervalButton = createButton('submit');
   intervalButton.id("interval");
   intervalButton.position(170, 165);
-  document.getElementById('interval').onclick = function(e) {inputVariable("interval","intervalValue");
-};
+  document.getElementById('interval').onclick = function(e)
+  {
+    inputVariable("interval","intervalValue");
+  };
 
 
 /////////  sensor Interval
@@ -68,14 +72,16 @@ function setup() {
   sIntervalTip = createSpan("period between checking moisture");
   sIntervalTip.class("tooltiptext");
   sIntervalTip.parent(sIntervalText);
-  sIntervalInput = createInput(curSInterval);
+  sIntervalInput = createInput("eneter sensor interval");
   sIntervalInput.id("sIntervalValue");
   sIntervalInput.position(20, 245);
   sIntervalButton = createButton('submit');
   sIntervalButton.id("sInterval");
   sIntervalButton.position(170, 245);
-  document.getElementById('sInterval').onclick = function(e) {inputVariable("sInterval","sIntervalValue");
-};
+  document.getElementById('sInterval').onclick = function(e)
+  {
+    inputVariable("sInterval","sIntervalValue");
+  };
 
 /////////  moisture threshold
 
@@ -85,37 +91,45 @@ function setup() {
   thresholdTip = createSpan("threshold below which watering commences");
   thresholdTip.class("tooltiptext");
   thresholdTip.parent(thresholdText);
-  thresholdInput = createInput(curThreshold);
+  thresholdInput = createInput("enter sensor interval");
   thresholdInput.id("thresholdValue");
   thresholdInput.position(20, 325);
   thresholdButton = createButton('submit');
   thresholdButton.id("threshold");
   thresholdButton.position(170, 325);
-  document.getElementById('threshold').onclick = function(e) {inputVariable("threshold","thresholdValue");
-};
+  document.getElementById('threshold').onclick = function(e)
+  {
+    inputVariable("threshold","thresholdValue");
+  };
 
   editButton = createButton('edit webpage');
   editButton.id('edit');
   editButton.position(350, 165);
-  document.getElementById('edit').onclick = function(e) {linkPage("edit.htm");
-};
+  document.getElementById('edit').onclick = function(e)
+  {
+    linkPage("edit.htm");
+  };
 
   flashButton = createButton('flash firmware');
   flashButton.position(450, 165);
   flashButton.id('flash');
-  document.getElementById('flash').onclick = function(e) {linkPage("flash.html");
-};
+  document.getElementById('flash').onclick = function(e)
+  {
+   linkPage("flash.html");
+  };
 
 
-flashButton = createButton('start page');
-flashButton.position(550, 165);
-flashButton.id('start');
-document.getElementById('start').onclick = function(e) {linkPage("index.html");
-};
+  flashButton = createButton('start page');
+  flashButton.position(550, 165);
+  flashButton.id('start');
+  document.getElementById('start').onclick = function(e)
+  {
+    linkPage("index.html");
+  };
 
   textAlign(LEFT);
   textSize(50);
-getVariables();
+  getVariables();
 
 }
 
@@ -135,24 +149,24 @@ function inputVariable(_variable,_valueId){
 }
 
 function getVariables(){
-console.log("getVAriables");
-
-   var address = url + "variables";
+   console.log("get variables");
+   var address = url + "/variables";
+   console.log(address);
    loadJSON(address, loadVariables);
 }
 
 function linkPage(page){
-console.log("got to edit page");
-
+   console.log("got to edit page");
    var address = url + page;
    window.location.href = address;
 }
 
 function loadVariables(newVariables){
-//Get the loaded JSON data
-console.log("commencing loading");
+  //Get the loaded JSON data
+  console.log("commencing loading");
   console.log(newVariables);
   //oldVari= newVariables.variTest;
+  //{"period":21"interval":44"sInterval":0"threshold":89"irrigating":0}
   curPeriod = newVariables.period; // get the main.humidity out of the loaded JSON
   curInterval = newVariables.interval;
   curSInterval = newVariables.sInterval;
@@ -170,23 +184,17 @@ console.log("commencing loading");
 function draw(){
   clear();
   textSize(20);
-	text(curPeriod, 75, 75);
-  text(curInterval, 75, 155);
-  text(curSInterval, 75, 235);
-  text(curThreshold, 75, 315);
+	text(curPeriod, 95, 75);
+  text(curInterval, 95, 155);
+  text(curSInterval, 95, 235);
+  text(curThreshold, 95, 315);
 /*
 if(millis()>last +2000){
 getVariables();
 last = millis();
 }
 */
-if(curWatering){
-  fill(0,255,0);
-}
-else{
-  fill(255,0,0);
-}
- rect(400,200,50,50);
+
 
 
 	//if(screenInit == 0){

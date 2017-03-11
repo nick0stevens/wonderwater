@@ -1,49 +1,43 @@
 
     void handleButtonSave(){
 
-      if(server.hasArg("Water")){
-        DBG_OUTPUT_PORT.println("handleWater ");
+    if (server.arg("Button")=="Water"){
+      if(operating){
+        if(irrigating){
+        closeValve();
+        Serial.println("water off");
+        irrigating = false;
+      }
+      else{
+        openValve();
+        irrigating = true;
+        needWater= false;
+        valveOnTime = currentTime;
+        Serial.println("water on");
+      }
+    }
+  }
 
-    if (server.arg("Water")=="false"){
+    if (server.arg("Button")=="Start"){
+      if(operating){
+      operating = false;
       closeValve();
       irrigating = false;
-      Serial.println("water off");
+      Serial.println("Stopped");
     }
-    if (server.arg("Water")=="true"){
-      openValve();
-      irrigating = true;
-      needWater= false;
-      valveOnTime = currentTime;
-      Serial.println("water on");
+    else{
+      operating = true;
+      Serial.println("Started");
     }
 }
-
-if(server.hasArg("Start")){
-  DBG_OUTPUT_PORT.println("handleStart ");
-
-if (server.arg("Start")=="false"){
-  operating = false;
-  closeValve();
-  irrigating = false;
-
-Serial.println("Stopped");
+/*
+String json = "{";
+json += "\"watering\":"+ String(irrigating) ;
+json += ", \"operating\":"+String(operating);
+json += "}";
+*/
+server.send(200, "text/html");
 }
-if (server.arg("Start")=="true"){
-  operating = true;
-
-Serial.println("Started");
-}
-}
-
-       // server.send(200, "text/html", "<INPUT type=\"button\" name=\"LED\" value=\"LED\"><BR>");
-
-       server.send(200, "text/html", "<form method='POST' action='/buttonPage/ONgg' <a href=\"ONbbb\"  value=\"LED\" button style=\"display: block; width: 10%;\">ON</button></a> <form method='GET' action='/buttonPage' <a href=\"off\"><button style=\"display: block; width: 100%;\">OFF</button></a>");
-
-   // server.send(200, "text/html", "<form method='GET'  <a href=\"ONbbb\"  value=\"IT\" button style=\"display: block; width: 10%;\">ON</button></a> <form method='GET' action='/buttonPage' <a href=\"off\"><button style=\"display: block; width: 100%;\">OFF</button></a>");
-    //server.send(200, "text/html", "<FORM><input type=\"button\" value=\"Add Students\" onclick=\"window.location.href='ON';\"></FORM>");
-
-      }
-
     void handleVariablesSave(){
 
       String varPeriod = server.arg("period");
@@ -74,18 +68,18 @@ Serial.println("Started");
       Serial.println(threshold);
       }
 
-     server.send(200, "text/plain", "");
+      saveConfig();
+      server.send(200, "text/html");
 
       //DBG_OUTPUT_PORT.println(period + interval);
    }
 
 
 
-
-
-
-
 void allowWebInterface(){
+  server.on("/buttons/save",  handleButtonSave);
+
+  server.on("/variables/save",  handleVariablesSave);
 
   //get heap status, analog input value and all GPIO statuses in one json call
   server.on("/all", HTTP_GET, [](){
@@ -107,6 +101,32 @@ void allowWebInterface(){
     json = String();
   });
 
+  //get analog input value in json call
+  server.on("/variables", HTTP_GET, [](){
+  /*  String json = "{";
+    json += "\"period\":"+ String(period) ;
+    json += ",\"interval\":"+ String(interval) ;
+    json += ", \"sInterval\":"+ String(sInterval) ;
+    json += ", \"threshold\":"+ String(threshold) ;
+    json += ", \"irrigating\":"+ String(irrigating) ;
+    json += ", \"operating\":"+ String(operating) ;
+    json += ", \"needWater\":"+ String(needWater) ;
+    json += "}";
+*/
+    StaticJsonBuffer<200> jsonBuffer;
+    JsonObject& json = jsonBuffer.createObject();
+    json["period"] = period;
+    json["interval"] = interval;
+    json["sInterval"] = sInterval;
+    json["threshold"] = threshold;
+    json["operating"] = operating;
+    json["irrigating"] = irrigating;
+    json["needWater"] = needWater;
+    char buffer[256];
+    json.printTo(buffer, sizeof(buffer));
+    server.send(200, "text/json", buffer);
+  });
+
   server.on("/buttons",HTTP_GET, [](){
   String json = "{";
   json += "\"watering\":"+ String(irrigating) ;
@@ -115,14 +135,5 @@ void allowWebInterface(){
   server.send(200, "text/json", json);
   json = String();
 });
-
-
-  server.on("/buttons/save",  handleButtonSave);
-
-
-  server.on("/variables/save",  handleVariablesSave);
-
-
-
 
   }

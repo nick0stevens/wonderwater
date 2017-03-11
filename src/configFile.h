@@ -10,10 +10,10 @@
 //---------------------WIFI DETAILS
 
 const char* host = "wonderWater"; // name for mDNS
-const char* ssid = "thebakery.no";
-const char* password = "morethanjustbread";
-//const char* ssid = "Zhone169537";
-//const char* password = "Conrad1sgat3";
+//const char* ssid = "thebakery.no";
+//const char* password = "morethanjustbread";
+const char* ssid = "Zhone169537";
+const char* password = "Conrad1sgat3";
 
 
 //---------------------PIN NUMBERS FOR SENSOR AND VALVE
@@ -32,13 +32,13 @@ bool debug = true;
 #define DBG_OUTPUT_PORT Serial
 
 
-int period = 10; // period of each watering in seconds
-int interval = 1; // period between waterings in minutes
-int sInterval = 30; // period between checking moisture // not needed??
-int threshold = 50; // threshold below which watering commences from 0-100. 100 is very wet
-bool operating = true; // if conmplete unit is operational
-bool irrigating = false; // if unit is currently irrigating
-bool needWater = false; //
+int period; // period of each watering in seconds
+int interval; // period between waterings in minutes
+int sInterval; // period between checking moisture // not needed??
+int threshold; // threshold below which watering commences from 0-100. 100 is very wet
+bool operating; // if conmplete unit is operational
+bool irrigating; // if unit is currently irrigating
+bool needWater; //
 long currentTime; // holds currentTime in miilis
 long lastSensorCheck; // holds time of last sensor check
 long valveOnTime; // holds time of last sensor check
