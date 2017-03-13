@@ -1,0 +1,11 @@
+{
+   "variables": {
+      "period": 10,
+      "interval": 1,
+      "sInterval": 30,
+      "threshold": 50,
+      "operating": 0,
+      "irrigating": 0,
+      "needWater": 0,
+   },
+}

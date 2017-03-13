@@ -4,7 +4,7 @@ void allowFileUploadOverWeb(){
   server.on("/list", HTTP_GET, handleFileList);
   //load editor
   server.on("/edit", HTTP_GET, [](){
-    if(!handleFileRead("/edit.htm")) server.send(404, "text/plain", "FileNotFound");
+    if(!handleFileRead("/edit.html")) server.send(404, "text/plain", "FileNotFound");
   });
   //create file
   server.on("/edit", HTTP_PUT, handleFileCreate);

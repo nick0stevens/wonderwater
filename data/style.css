@@ -12,6 +12,16 @@
     padding: 10px;
 }
 
+.active {
+    background-color: green;
+    font-size: 16pt;
+}
+
+.inactive {
+    background-color: grey;
+    font-size: 16pt;
+}
+
 .h1 {
     font: 25px arial, sans-serif;
 
